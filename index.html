@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sumit Chaurasia — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F2EE;
+  --bg2: #ECEAE4;
+  --ink: #0E0E0C;
+  --ink2: #4A4A46;
+  --ink3: #9A9A94;
+  --accent: #C8441A;
+  --border: rgba(14,14,12,0.1);
+  --modal-bg: rgba(14,14,12,0.55);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Roboto', monospace;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── ABSTRACT BG CANVAS ── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+  background: rgba(244,242,238,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links-desktop {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links-desktop a {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links-desktop a:hover { color: var(--ink); }
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: all 0.3s;
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed;
+  top: 0; right: -100%;
+  width: min(320px, 85vw);
+  height: 100vh;
+  background: var(--ink);
+  z-index: 190;
+  padding: 6rem 2.5rem 3rem;
+  transition: right 0.4s cubic-bezier(0.77,0,0.18,1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mobile-menu.open { right: 0; }
+.mobile-menu a {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(244,242,238,0.25);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+  letter-spacing: -0.02em;
+}
+.mobile-menu a:hover { color: #F4F2EE; }
+.mobile-menu-footer {
+  margin-top: auto;
+  font-size: 11px;
+  color: rgba(244,242,238,0.3);
+  letter-spacing: 0.08em;
+}
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14,14,12,0.4);
+  z-index: 185;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+
+/* ── HERO ── */
+#hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.hero-inner { max-width: 720px; }
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: riseIn 0.7s ease 0.2s forwards;
+}
+.hero-label::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: riseIn 0.7s ease 0.35s forwards;
+}
+h1 .accent { color: var(--accent); }
+.hero-desc {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.9;
+  max-width: 480px;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: riseIn 0.7s ease 0.5s forwards;
+}
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: riseIn 0.7s ease 0.65s forwards;
+}
+.btn-solid {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.8rem 2rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-solid:hover { background: var(--accent); }
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  padding: 0.8rem 2rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--ink); }
+.hero-stats {
+  display: flex;
+  gap: 3.5rem;
+  margin-top: 6rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: riseIn 0.7s ease 0.8s forwards;
+  flex-wrap: wrap;
+}
+.stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-val span { color: var(--accent); }
+.stat-lbl {
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+/* ── SECTIONS ── */
+.section {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 7rem 3rem;
+}
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+}
+.sec-num {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.sec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.sec-rule { flex: 1; height: 1px; background: var(--border); }
+
+/* ── SKILLS ── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.skill-card {
+  background: var(--bg);
+  padding: 2rem 1.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card::after {
+  content: 'click to explore →';
+  position: absolute;
+  bottom: 1rem;
+  right: 1.25rem;
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.skill-card:hover { background: var(--bg2); }
+.skill-card:hover::after { opacity: 1; }
+.skill-icon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+.skill-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.skill-years {
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: 0.06em;
+}
+.skill-card-other {
+  background: var(--bg);
+  padding: 1.5rem 1.75rem;
+}
+.skill-other-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 0.75rem;
+}
+.skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.stag {
+  font-size: 11px;
+  padding: 0.25rem 0.6rem;
+  background: var(--bg2);
+  color: var(--ink2);
+  border: 1px solid var(--border);
+  letter-spacing: 0.04em;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-box {
+  background: var(--ink);
+  color: #F4F2EE;
+  max-width: 600px;
+  width: 100%;
+  padding: 3rem;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-close {
+  position: absolute;
+  top: 1.5rem; right: 1.75rem;
+  background: none;
+  border: none;
+  color: rgba(244,242,238,0.4);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: #F4F2EE; }
+.modal-skill-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.modal-skill-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+  line-height: 1;
+}
+.modal-exp {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-top: 1px solid rgba(244,242,238,0.1);
+  padding-top: 2rem;
+}
+.modal-exp-item {}
+.modal-company {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #F4F2EE;
+  margin-bottom: 0.2rem;
+}
+.modal-period {
+  font-size: 10px;
+  color: rgba(244,242,238,0.35);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.6rem;
+}
+.modal-desc {
+  font-size: 12px;
+  color: rgba(244,242,238,0.6);
+  line-height: 1.8;
+}
+
+/* ── EXPERIENCE ── */
+.exp-list { display: flex; flex-direction: column; gap: 0; }
+.exp-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 3rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.exp-item:first-child { border-top: 1px solid var(--border); }
+.exp-left {}
+.exp-company {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+.exp-period {
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.06em;
+}
+.exp-right {}
+.exp-role {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.exp-points { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.exp-points li {
+  font-size: 13px;
+  color: var(--ink2);
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.7;
+}
+.exp-points li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--ink3);
+  font-size: 11px;
+}
+
+/* ── MAP ── */
+.map-wrapper {
+  position: relative;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.map-label {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1rem;
+}
+.map-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 420px;
+  border: none;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.3s;
+}
+.map-wrapper:hover iframe { filter: grayscale(0.5) contrast(1); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-left {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+.footer-left span { color: var(--accent); }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--ink); }
+
+/* ── ANIMATIONS ── */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 1.1rem 1.5rem; }
+  .nav-links-desktop { display: none; }
+  .hamburger { display: flex; }
+  #hero { padding: 0 1.5rem; }
+  .section { padding: 5rem 1.5rem; }
+  .exp-item { grid-template-columns: 1fr; gap: 0.75rem; }
+  footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SC<span>.</span></a>
+  <ul class="nav-links-desktop">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#location">Location</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://sumitchaurasia.netlify.app/resume/Sumit_DataEngineer_Resume.pdf" target="_blank">Resume ↗</a></li>
+  </ul>
+  <button class="hamburger" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="menu-overlay" id="overlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#skills" class="mob-link">Skills</a>
+  <a href="#experience" class="mob-link">Experience</a>
+  <a href="#location" class="mob-link">Location</a>
+  <a href="#contact" class="mob-link">Contact</a>
+  <a href="https://sumitchaurasia.netlify.app/resume/Sumit_DataEngineer_Resume.pdf" target="_blank" class="mob-link">Resume ↗</a>
+  <p class="mobile-menu-footer">iamsumit.sc@gmail.com</p>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Data Engineer II &nbsp; · &nbsp; 5+ Years</p>
+    <h1>Sumit<br>Chau<span class="accent">rasia</span></h1>
+    <p class="hero-desc">
+      Data engineer who never says no.<br>
+      I find the solution, not the workaround.<br>
+      Built on Databricks, PySpark, and stubbornness.
+    </p>
+    <div class="hero-ctas">
+      <a href="https://sumitchaurasia.netlify.app/resume/Sumit_DataEngineer_Resume.pdf" target="_blank" class="btn-solid">Download Resume</a>
+      <a href="https://linkedin.com/in/iamsumitc" target="_blank" class="btn-outline">LinkedIn</a>
+      <a href="https://github.com/isumitsr" target="_blank" class="btn-outline">GitHub</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">5<span>+</span></div>
+        <div class="stat-lbl">Years</div>
+      </div>
+      <div>
+        <div class="stat-val">100tb<span>+</span></div>
+        <div class="stat-lbl">data pipeline products</div>
+      </div>
+      <div>
+        <div class="stat-val">90<span>%</span></div>
+        <div class="stat-lbl">Perf. Gains</div>
+      </div>
+      <div>
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">Companies</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="sec-head reveal">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Skills</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="skills-grid reveal">
+    <!-- CLICKABLE SKILLS -->
+    <div class="skill-card" onclick="openModal('pyspark')">
+      <div class="skill-icon">&gt;_</div>
+      <div class="skill-name">PySpark</div>
+      <div class="skill-years">5+ years · Click to explore</div>
+    </div>
+    <div class="skill-card" onclick="openModal('databricks')">
+      <div class="skill-icon">◈</div>
+      <div class="skill-name">Databricks</div>
+      <div class="skill-years">3+ years · Click to explore</div>
+    </div>
+    <div class="skill-card" onclick="openModal('sql')">
+      <div class="skill-icon">⬡</div>
+      <div class="skill-name">SQL / T-SQL</div>
+      <div class="skill-years">5+ years · Click to explore</div>
+    </div>
+    <div class="skill-card" onclick="openModal('python')">
+      <div class="skill-icon">∿</div>
+      <div class="skill-name">Python</div>
+      <div class="skill-years">5+ years · Click to explore</div>
+    </div>
+
+    <!-- OTHER SKILLS -->
+    <div class="skill-card-other">
+      <div class="skill-other-label">Cloud & Infra</div>
+      <div class="skill-tags">
+        <span class="stag">AWS Glue</span>
+        <span class="stag">S3</span>
+        <span class="stag">Lambda</span>
+        <span class="stag">Azure ADF</span>
+        <span class="stag">ADLS</span>
+      </div>
+    </div>
+    <div class="skill-card-other">
+      <div class="skill-other-label">Data Stack</div>
+      <div class="skill-tags">
+        <span class="stag">Delta Lake</span>
+        <span class="stag">Unity Catalog</span>
+        <span class="stag">dbt</span>
+        <span class="stag">Airflow</span>
+        <span class="stag">SSIS</span>
+      </div>
+    </div>
+    <div class="skill-card-other">
+      <div class="skill-other-label">Architecture</div>
+      <div class="skill-tags">
+        <span class="stag">Medallion</span>
+        <span class="stag">Lakehouse</span>
+        <span class="stag">ETL/ELT</span>
+        <span class="stag">Star Schema</span>
+        <span class="stag">Snowflake Schema</span>
+      </div>
+    </div>
+    <div class="skill-card-other">
+      <div class="skill-other-label">Other</div>
+      <div class="skill-tags">
+        <span class="stag">PostgreSQL</span>
+        <span class="stag">SQL Server</span>
+        <span class="stag">Bash</span>
+        <span class="stag">CircleCI</span>
+        <span class="stag">DABs</span>
+        <span class="stag">MCP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="section" id="experience">
+  <div class="sec-head reveal">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Experience</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="exp-list">
+
+    <div class="exp-item reveal">
+      <div class="exp-left">
+        <div class="exp-company">YipitData</div>
+        <div class="exp-period">Jul 2025 – Present</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Data Engineer II</div>
+        <ul class="exp-points">
+          <li>Architected a merchant-configurable ETL framework on Databricks, standardizing pipelines for 200+ retail merchants.</li>
+          <li>Reduced new-merchant onboarding time by 70% via OOP framework and MCP-driven automation.</li>
+          <li>Building a unified Delta Lakehouse on Unity Catalog powering hedge-fund analytical products.</li>
+          <li>Delivered data quality improvements via OCR-aware reconciliation and LLM-based product enrichment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-left">
+        <div class="exp-company">Deloitte USI</div>
+        <div class="exp-period">Nov 2024 – Jul 2025</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Data Consultant in Supply Chain Network optimization</div>
+        <ul class="exp-points">
+          <li>Improved AWS Glue batch processing performance by 40% through Spark tuning and partitioning.</li>
+          <li>Built automated test frameworks for end-to-end data flow for a global automotive client.</li>
+          <li>Bridged business stakeholders and technical teams, driving PostgreSQL data model improvements.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-left">
+        <div class="exp-company">o9 Solutions</div>
+        <div class="exp-period">Dec 2020 – Nov 2024</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Technical Consultant → Senior Technical Consultant</div>
+        <ul class="exp-points">
+          <li>Reduced data processing time by 90% through query tuning, partitioning, and parallelization.</li>
+          <li>Designed star and snowflake schema models for enterprise data warehousing.</li>
+          <li>Architected ETL/ELT pipelines using ADF, Databricks, Spark, and SSIS.</li>
+          <li>Built pipelines processing millions of records daily; cut SQL execution time by 40%.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="section" id="location">
+  <div class="sec-head reveal">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Location</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="map-wrapper reveal">
+    <div class="map-label">HSR Layout, Bangalore</div>
+    <iframe
+      src="https://www.openstreetmap.org/export/embed.html?bbox=77.6273%2C12.8916%2C77.6673%2C12.9316&layer=mapnik&marker=12.9116%2C77.6473"
+      loading="lazy"
+      title="HSR Layout Bangalore"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="sec-head reveal">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Contact</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <p style="font-size:14px;color:var(--ink2);max-width:460px;line-height:1.9;margin-bottom:2.5rem;" class="reveal">
+    Open to interesting problems. If you have one worth solving, let's talk.
+  </p>
+  <div class="hero-ctas reveal">
+    <a href="mailto:iamsumit.sc@gmail.com" class="btn-solid">Email Me</a>
+    <a href="https://linkedin.com/in/iamsumitc" target="_blank" class="btn-outline">Connect on LinkedIn</a>
+    <a href="https://github.com/isumitsr" target="_blank" class="btn-outline">GitHub</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">SC<span>.</span></div>
+  <div class="footer-links">
+    <a href="mailto:iamsumit.sc@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/iamsumitc" target="_blank">LinkedIn</a>
+    <a href="https://github.com/isumitsr" target="_blank">GitHub</a>
+    <a href="https://sumitchaurasia.netlify.app/resume/Sumit_DataEngineer_Resume.pdf" target="_blank">Resume</a>
+  </div>
+</footer>
+
+<!-- SKILL MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-skill-label" id="modal-label"></div>
+    <div class="modal-skill-name" id="modal-name"></div>
+    <div class="modal-exp" id="modal-exp"></div>
+  </div>
+</div>
+
+<script>
+/* ── ABSTRACT BG ── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes = [], animId;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function initNodes() {
+  nodes = [];
+  const count = Math.floor((W * H) / 22000);
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 2 + 1
+    });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(14,14,12,0.4)';
+    ctx.fill();
+  });
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 140) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `rgba(14,14,12,${0.15 * (1 - dist / 140)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  animId = requestAnimationFrame(draw);
+}
+
+resize(); initNodes(); draw();
+window.addEventListener('resize', () => { resize(); initNodes(); });
+
+/* ── HAMBURGER ── */
+const ham = document.getElementById('ham');
+const menu = document.getElementById('mobileMenu');
+const overlay = document.getElementById('overlay');
+
+function toggleMenu() {
+  ham.classList.toggle('open');
+  menu.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+ham.addEventListener('click', toggleMenu);
+overlay.addEventListener('click', toggleMenu);
+document.querySelectorAll('.mob-link').forEach(a => {
+  a.addEventListener('click', toggleMenu);
+});
+
+/* ── SCROLL REVEAL ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── SKILL MODALS ── */
+const modalData = {
+  pyspark: {
+    label: 'Core Skill',
+    name: 'PySpark',
+    exp: [
+      {
+        company: 'YipitData',
+        period: 'Jul 2025 – Present',
+        desc: 'Built a merchant-configurable ETL framework using PySpark on Databricks, standardizing silver and gold layer pipelines for 200+ retail merchants. Drove 70% reduction in onboarding time through OOP-based pipeline design and reusable transformation components.'
+      },
+      {
+        company: 'Deloitte USI',
+        period: 'Nov 2024 – Jul 2025',
+        desc: 'Tuned Spark jobs running on AWS Glue, improving batch processing performance by 40%. Refined partitioning strategies and executor configs to handle high-volume automotive supply chain datasets.'
+      },
+      {
+        company: 'o9 Solutions',
+        period: 'Dec 2020 – Nov 2024',
+        desc: 'Led ETL development across distributed systems using PySpark and Databricks, reducing data processing time by 90% through parallelization, query tuning, and partition pruning strategies.'
+      }
+    ]
+  },
+  databricks: {
+    label: 'Core Skill',
+    name: 'Databricks',
+    exp: [
+      {
+        company: 'YipitData',
+        period: 'Jul 2025 – Present',
+        desc: 'Primary platform for all data engineering. Built a unified Delta Lakehouse (bronze/silver/gold) on Unity Catalog integrating email receipts, store receipts, and scraped catalogs. Used Databricks Asset Bundles (DABs) for CI/CD and MLflow for experiment tracking.'
+      },
+      {
+        company: 'o9 Solutions',
+        period: 'Jul 2022 – Nov 2024',
+        desc: 'Architected ETL/ELT pipelines combining Azure Data Factory with Databricks, integrating multi-source supply chain datasets. Designed scalable data models on top of Databricks-managed tables to support enterprise analytics.'
+      }
+    ]
+  },
+  sql: {
+    label: 'Core Skill',
+    name: 'SQL / T-SQL',
+    exp: [
+      {
+        company: 'o9 Solutions',
+        period: 'Dec 2020 – Nov 2024',
+        desc: 'Optimized hundreds of SQL queries and stored procedures on SQL Server, reducing execution time by 40% across semi-structured datasets. Designed star and snowflake schemas for enterprise data warehousing supporting multi-source supply chain data.'
+      },
+      {
+        company: 'Deloitte USI',
+        period: 'Nov 2024 – Jul 2025',
+        desc: 'Drove data model improvements in PostgreSQL for master and transactional datasets supporting supply chain planning for a global automotive client. Validated data across source systems and vendor platforms using complex SQL reconciliation queries.'
+      },
+      {
+        company: 'YipitData',
+        period: 'Jul 2025 – Present',
+        desc: 'Writes gold-layer SQL transformations in Unity Catalog to power investor-facing and hedge-fund analytical products. Handles source-priority resolution and data quality checks via SQL-based reconciliation layers.'
+      }
+    ]
+  },
+  python: {
+    label: 'Core Skill',
+    name: 'Python',
+    exp: [
+      {
+        company: 'YipitData',
+        period: 'Jul 2025 – Present',
+        desc: 'Built the entire merchant onboarding framework in Python using OOP design patterns. Developed custom MCP subagents and reusable skills in Python to automate scaffolding, validation, and deployment of merchant configs end-to-end.'
+      },
+      {
+        company: 'Deloitte USI',
+        period: 'Nov 2024 – Jul 2025',
+        desc: 'Wrote automated test frameworks in Python for end-to-end data flow validation on AWS Glue pipelines. Used Python scripts for data profiling and quality checks across PostgreSQL source systems.'
+      },
+      {
+        company: 'o9 Solutions',
+        period: 'Dec 2020 – Nov 2024',
+        desc: 'Used Python for pipeline orchestration scripts, data transformation logic, and automation tasks across ADF and Databricks-based ETL workflows. Also contributed to reprocessing logic for demand-allocation error handling, improving accuracy by 30%+.'
+      }
+    ]
+  }
+};
+
+function openModal(key) {
+  const d = modalData[key];
+  document.getElementById('modal-label').textContent = d.label;
+  document.getElementById('modal-name').textContent = d.name;
+  document.getElementById('modal-exp').innerHTML = d.exp.map(e => `
+    <div class="modal-exp-item">
+      <div class="modal-company">${e.company}</div>
+      <div class="modal-period">${e.period}</div>
+      <div class="modal-desc">${e.desc}</div>
+    </div>
+  `).join('');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
